@@ -192,6 +192,18 @@
 
 
 
+    .countdownWrapper{
+      margin-top: 50px;
+      text-align: center;
+    }
+    
+    .countdown{
+      font-size: clamp(22px, 3vw, 30px);
+      font-weight: 700;
+      color: #E7BE42;
+      letter-spacing: .05em;
+    }
+
             
     footer{
       border-top: 1px solid rgba(244,242,234,.10);
@@ -265,33 +277,73 @@
   </main>
 
   <section class="section" id="coming">
+  
+    <!-- opens .gri d -->
     <div class="grid">
+      
       <div class="card">
         <h3>Upcoming Adventures</h3>
         <p>  ∆ From saturday 20th of june to saturday 4th of july 2026. </p>
         <p>  ∆ Duration: 14 days / 13 nights </p>
         <p>  ∆ The goal: unforgettable, respectful, and deeply human travel.</p>
       </div>
+      
       <div class="card">
         <h3> Starting with an Exclusive Invitation for the Lozano Family</h3>
         <p>  ∆ On this Valentine’s Day, we — David and Gabriel ;D — are thrilled to officially invite you to join us on an unforgettable summer adventure exploring the Mayan ruins. </p>
         <p> </p>
         <p>  ∆ We kindly ask each family member to confirm their attendance (yes or no) by mid-March 2026.</p>
       </div>
+      
       <div class="card">
         <h3>AI-enabled Hub (in progress)</h3>
         <p>  ∆ We're starting with friends & family but later: booking, automation, and personalized itineraries—built on the hub somosmaya.io</p>
       </div>
+    
     </div>
+    <!-- closes .gri d -->
+    
+    <div class="countdownWrapper">
+      <p id="countdown" class="countdown"></p>
+    </div>
+    
   </section>
 
   <footer>
     © <span id="y"></span> SomosMaya.io
   </footer>
-
+<!-- v1
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
   </script>
+  -->
+  <script>
+    // Footer year
+    document.getElementById("y").textContent = new Date().getFullYear();
+  
+    // Countdown
+    const targetDate = new Date("June 20, 2026 00:00:00").getTime();
+    const countdownEl = document.getElementById("countdown");
+  
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const difference = targetDate - now;
+  
+      const days = Math.ceil(difference / (1000 * 60 * 60 * 24));
+  
+      if (days > 0) {
+        countdownEl.textContent = `⏳ ${days} days until June 20, 2026`;
+      } else {
+        countdownEl.textContent = "🌎 The adventure has begun!";
+      }
+    }
+  
+    updateCountdown();
+    setInterval(updateCountdown, 86400000);
+  </script>
+
+
+  
 </body>
 </html>
 
