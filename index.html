@@ -202,6 +202,26 @@
       background: rgba(0,0,0,.44);
     }
 
+    .heroArc{
+      position: absolute;
+      left: 50%;
+      top: 34%;
+      width: min(520px, 82vw);
+      height: auto;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+      pointer-events: none;
+      filter: drop-shadow(0 8px 24px rgba(0,0,0,.42));
+    }
+
+    .heroArc text{
+      fill: rgba(244,242,234,.94);
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
     /* CONTENT */
     .section{
       width: min(980px, 100%);
@@ -220,6 +240,8 @@
       .grid{ grid-template-columns: 1fr; }
       .section{ margin-top: -28px; }
       .heroToggle{ right: 18px; bottom: 22px; }
+      .heroArc{ top: 32%; width: min(420px, 88vw); }
+      .heroArc text{ font-size: 24px; letter-spacing: .12em; }
     }
 
     .card{
@@ -303,6 +325,17 @@
           M0,175 C260,145 380,230 600,185 C820,140 980,220 1200,185 L1200,220 L0,220 Z
           " />
       </path>
+    </svg>
+
+    <svg class="heroArc" viewBox="0 0 520 220" aria-hidden="true">
+      <defs>
+        <path id="adventureArc" d="M70 160 A190 190 0 0 1 450 160"></path>
+      </defs>
+      <text>
+        <textPath href="#adventureArc" startOffset="50%" text-anchor="middle">
+          The adventure awaits!
+        </textPath>
+      </text>
     </svg>
 
     <button class="heroToggle" type="button" aria-label="Show next hero image" aria-pressed="false"></button>
