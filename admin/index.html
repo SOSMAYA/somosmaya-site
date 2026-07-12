@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SOSMAYA Admin</title>
+  <style>
+    :root{
+      --bg:#07100c;
+      --panel:#111916;
+      --panel2:#18221e;
+      --fg:#f4f2ea;
+      --muted:rgba(244,242,234,.66);
+      --line:rgba(244,242,234,.16);
+      --accent:#e7be42;
+      --danger:#f26d5b;
+      --ok:#72d28f;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      background:var(--bg);
+      color:var(--fg);
+      line-height:1.4;
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:18px 24px;
+      border-bottom:1px solid var(--line);
+      background:rgba(7,16,12,.92);
+      position:sticky;
+      top:0;
+      z-index:2;
+    }
+
+    h1{
+      margin:0;
+      font-size:20px;
+      letter-spacing:.02em;
+    }
+
+    main{
+      width:min(1080px,100%);
+      margin:0 auto;
+      padding:24px;
+    }
+
+    .identity{
+      color:var(--muted);
+      font-size:14px;
+      text-align:right;
+    }
+
+    .toolbar{
+      display:grid;
+      grid-template-columns:1.2fr 1.2fr .8fr auto;
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    input,select,button{
+      font:inherit;
+      border:1px solid var(--line);
+      border-radius:8px;
+    }
+
+    input,select{
+      min-width:0;
+      width:100%;
+      padding:10px 12px;
+      color:var(--fg);
+      background:var(--panel);
+    }
+
+    button{
+      padding:10px 12px;
+      color:var(--fg);
+      background:var(--panel2);
+      cursor:pointer;
+    }
+
+    button:hover{ border-color:rgba(244,242,234,.34); }
+    .primary{ background:var(--accent); color:#15120a; border-color:var(--accent); font-weight:700; }
+    .danger{ color:#fff; background:rgba(242,109,91,.14); border-color:rgba(242,109,91,.42); }
+
+    .panel{
+      border:1px solid var(--line);
+      border-radius:8px;
+      overflow:hidden;
+      background:var(--panel);
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+    }
+
+    th,td{
+      padding:12px;
+      border-bottom:1px solid var(--line);
+      text-align:left;
+      vertical-align:middle;
+      font-size:14px;
+    }
+
+    th{
+      color:var(--muted);
+      font-weight:700;
+      background:rgba(255,255,255,.03);
+    }
+
+    tr:last-child td{ border-bottom:0; }
+    .actions{ display:flex; gap:8px; justify-content:flex-end; }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      height:24px;
+      padding:0 8px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      color:var(--muted);
+      font-size:12px;
+      text-transform:capitalize;
+    }
+    .active{ color:var(--ok); border-color:rgba(114,210,143,.42); }
+    .inactive{ color:var(--danger); border-color:rgba(242,109,91,.42); }
+    .empty{
+      padding:28px;
+      color:var(--muted);
+      text-align:center;
+    }
+
+    @media (max-width:760px){
+      header{ align-items:flex-start; flex-direction:column; }
+      .identity{ text-align:left; }
+      main{ padding:16px; }
+      .toolbar{ grid-template-columns:1fr; }
+      table,thead,tbody,tr,th,td{ display:block; }
+      thead{ display:none; }
+      tr{ border-bottom:1px solid var(--line); padding:10px 0; }
+      td{ border:0; padding:7px 12px; }
+      td::before{ content:attr(data-label); display:block; color:var(--muted); font-size:12px; margin-bottom:3px; }
+      .actions{ justify-content:flex-start; flex-wrap:wrap; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>SOSMAYA Admin</h1>
+    <div class="identity" id="identity">Checking access identity...</div>
+  </header>
+
+  <main>
+    <form class="toolbar" id="userForm">
+      <input id="email" type="email" placeholder="email@example.com" autocomplete="off" required />
+      <input id="name" type="text" placeholder="Name" autocomplete="off" />
+      <select id="role" aria-label="Role">
+        <option value="admin">Admin</option>
+        <option value="editor">Editor</option>
+        <option value="viewer">Viewer</option>
+      </select>
+      <button class="primary" type="submit">Add user</button>
+    </form>
+
+    <div class="toolbar">
+      <input id="search" type="search" placeholder="Search users" autocomplete="off" />
+      <span></span>
+      <span></span>
+      <button id="exportUsers" type="button">Export JSON</button>
+    </div>
+
+    <section class="panel">
+      <table>
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="userRows"></tbody>
+      </table>
+      <div class="empty" id="emptyState" hidden>No users yet.</div>
+    </section>
+  </main>
+
+  <script>
+    const storageKey = "somosmaya.admin.users";
+    const rowsEl = document.getElementById("userRows");
+    const emptyEl = document.getElementById("emptyState");
+    const searchEl = document.getElementById("search");
+    const formEl = document.getElementById("userForm");
+
+    function loadUsers(){
+      try { return JSON.parse(localStorage.getItem(storageKey)) || []; }
+      catch { return []; }
+    }
+
+    function saveUsers(users){
+      localStorage.setItem(storageKey, JSON.stringify(users));
+    }
+
+    function render(){
+      const query = searchEl.value.trim().toLowerCase();
+      const users = loadUsers();
+      const filtered = users.filter((user) => {
+        return [user.email, user.name, user.role, user.status].join(" ").toLowerCase().includes(query);
+      });
+
+      rowsEl.innerHTML = "";
+      emptyEl.hidden = filtered.length > 0;
+
+      for (const user of filtered) {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td data-label="Email">${user.email}</td>
+          <td data-label="Name">${user.name || "-"}</td>
+          <td data-label="Role"><span class="badge">${user.role}</span></td>
+          <td data-label="Status"><span class="badge ${user.status}">${user.status}</span></td>
+          <td data-label="Actions">
+            <div class="actions">
+              <button type="button" data-action="toggle" data-email="${user.email}">
+                ${user.status === "active" ? "Deactivate" : "Activate"}
+              </button>
+              <button class="danger" type="button" data-action="remove" data-email="${user.email}">Remove</button>
+            </div>
+          </td>
+        `;
+        rowsEl.appendChild(tr);
+      }
+    }
+
+    formEl.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const email = document.getElementById("email").value.trim().toLowerCase();
+      const name = document.getElementById("name").value.trim();
+      const role = document.getElementById("role").value;
+      const users = loadUsers();
+
+      if (users.some((user) => user.email === email)) return;
+
+      users.push({ email, name, role, status:"active", createdAt:new Date().toISOString() });
+      saveUsers(users);
+      formEl.reset();
+      render();
+    });
+
+    rowsEl.addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-action]");
+      if (!button) return;
+
+      const users = loadUsers();
+      const email = button.dataset.email;
+      const action = button.dataset.action;
+
+      if (action === "remove") {
+        saveUsers(users.filter((user) => user.email !== email));
+      }
+
+      if (action === "toggle") {
+        saveUsers(users.map((user) => {
+          if (user.email !== email) return user;
+          return { ...user, status:user.status === "active" ? "inactive" : "active" };
+        }));
+      }
+
+      render();
+    });
+
+    searchEl.addEventListener("input", render);
+
+    document.getElementById("exportUsers").addEventListener("click", () => {
+      const blob = new Blob([JSON.stringify(loadUsers(), null, 2)], { type:"application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "somosmaya-users.json";
+      link.click();
+      URL.revokeObjectURL(url);
+    });
+
+    fetch("/cdn-cgi/access/get-identity")
+      .then((response) => response.ok ? response.json() : null)
+      .then((identity) => {
+        document.getElementById("identity").textContent = identity?.email
+          ? `Signed in as ${identity.email}`
+          : "Protected by Cloudflare Access";
+      })
+      .catch(() => {
+        document.getElementById("identity").textContent = "Protected by Cloudflare Access";
+      });
+
+    render();
+  </script>
+</body>
+</html>
