@@ -160,8 +160,8 @@
     /* CONTENT */
     .section{
       width: min(980px, 100%);
-      margin: -54px auto 0;
-      padding: 0 18px 70px;
+      margin: 0 auto;
+      padding: 44px 18px 70px;
       position: relative;
       z-index: 1;
     }
@@ -173,7 +173,7 @@
     }
     @media (max-width: 860px){
       .grid{ grid-template-columns: 1fr; }
-      .section{ margin-top: -28px; }
+      .section{ margin-top: 0; }
     }
 
     .card{
@@ -228,7 +228,7 @@
 </head>
 
 <body>
-  <main class="hero">
+  <main class="hero" hidden>
     <div class="grain"></div>
 
     <!-- Organic animated waves -->
