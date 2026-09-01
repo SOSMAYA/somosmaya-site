@@ -404,7 +404,14 @@
     }
   
     // Countdown
-    const targetDate = new Date("June 18, 2026 00:00:00").getTime();
+    const now = new Date();
+    const nextAdventure = new Date(now.getFullYear(), 5, 18);
+
+    if (nextAdventure <= now) {
+      nextAdventure.setFullYear(now.getFullYear() + 1);
+    }
+
+    const targetDate = nextAdventure.getTime();
     const countdownEl = document.getElementById("countdown");
   
     function updateCountdown() {
@@ -414,9 +421,9 @@
       const days = Math.ceil(difference / (1000 * 60 * 60 * 24));
   
       if (days > 0) {
-        countdownEl.textContent = `⏳ ${days} days until June 18, 2026 ⏳`;
+        countdownEl.textContent = `⏳ ${days} days until June 18, ${nextAdventure.getFullYear()} ⏳`;
       } else {
-        countdownEl.textContent = "🌎 The adventure has ended.";
+        countdownEl.textContent = "🌎 The adventure awaits...";
       }
     }
   
