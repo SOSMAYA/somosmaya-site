@@ -272,6 +272,94 @@
       letter-spacing: .05em;
     }
 
+    .adventureUpdate{
+      position: relative;
+      width: min(720px, 100%);
+      margin: 28px auto 0;
+      padding: 28px 24px 20px;
+      overflow: hidden;
+      text-align: center;
+      border: 1px solid rgba(231,190,66,.34);
+      border-radius: 22px;
+      background: linear-gradient(135deg, rgba(231,190,66,.12), rgba(255,59,129,.08));
+      box-shadow: 0 22px 60px rgba(0,0,0,.26);
+    }
+
+    .adventureUpdate::before{
+      content: "";
+      position: absolute;
+      inset: -80% 20%;
+      background: radial-gradient(circle, rgba(231,190,66,.16), transparent 62%);
+      animation: updateGlow 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .adventureUpdate p{
+      position: relative;
+      margin: 0 auto;
+      max-width: 34ch;
+      font-size: clamp(20px, 3vw, 28px);
+      font-weight: 750;
+      line-height: 1.35;
+    }
+
+    .journeyTrail{
+      position: relative;
+      width: min(440px, 90%);
+      height: 58px;
+      margin: 22px auto 0;
+    }
+
+    .journeyTrail::before{
+      content: "";
+      position: absolute;
+      left: 10%;
+      right: 10%;
+      top: 50%;
+      border-top: 2px dashed rgba(244,242,234,.32);
+    }
+
+    .trailStop,
+    .trailTraveler{
+      position: absolute;
+      top: 50%;
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #111813;
+      box-shadow: 0 8px 22px rgba(0,0,0,.34);
+      transform: translate(-50%, -50%);
+      font-size: 23px;
+    }
+
+    .trailStop:first-child{ left: 8%; }
+    .trailStop:last-child{ left: 92%; }
+
+    .trailTraveler{
+      left: 18%;
+      z-index: 1;
+      background: #E7BE42;
+      animation: journeyAcross 5.5s ease-in-out infinite;
+    }
+
+    @keyframes journeyAcross{
+      0%, 100%{ left: 18%; transform: translate(-50%, -50%) rotate(-8deg); }
+      50%{ left: 82%; transform: translate(-50%, -62%) rotate(8deg); }
+    }
+
+    @keyframes updateGlow{
+      0%, 100%{ opacity: .45; transform: scale(.9); }
+      50%{ opacity: 1; transform: scale(1.12); }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .adventureUpdate::before,
+      .trailTraveler{ animation: none; }
+      .trailTraveler{ left: 50%; }
+    }
+
             
     footer{
       border-top: 1px solid rgba(244,242,234,.10);
@@ -374,6 +462,15 @@
     
     <div class="countdownWrapper">
       <p id="countdown" class="countdown"></p>
+    </div>
+
+    <div class="adventureUpdate">
+      <p>Our first adventure has been registered, stay tuned as we plan for the next one! 🌎✨</p>
+      <div class="journeyTrail" aria-hidden="true">
+        <span class="trailStop">🏛️</span>
+        <span class="trailTraveler">🐆</span>
+        <span class="trailStop">🌅</span>
+      </div>
     </div>
     
   </section>
