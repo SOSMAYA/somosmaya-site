@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - design/landing-options
 
 permissions:
   contents: read
@@ -28,6 +29,6 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFARE_API_TOKEN }}
           accountId: 69d265e74702eea2ca0f311d126048c8
-          command: pages deploy . --project-name=somosmaya-site --branch=main
+          command: pages deploy . --project-name=somosmaya-site --branch=${{ github.ref_name }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
           workingDirectory: deploy
