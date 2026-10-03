@@ -26,7 +26,7 @@ jobs:
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v4
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          apiToken: ${{ secrets.CLOUDFARE_API_TOKEN }}
           accountId: 69d265e74702eea2ca0f311d126048c8
           command: pages deploy . --project-name=somosmaya-site --branch=main
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
