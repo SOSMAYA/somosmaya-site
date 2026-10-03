@@ -1,0 +1,33 @@
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  deployments: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Stage site files
+        shell: bash
+        run: |
+          mkdir -p deploy
+          git archive HEAD | tar -x -C deploy
+          rm -rf deploy/.github
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: 69d265e74702eea2ca0f311d126048c8
+          command: pages deploy . --project-name=somosmaya-site --branch=main
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          workingDirectory: deploy
