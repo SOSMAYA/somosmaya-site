@@ -13,3 +13,13 @@ GitHub Actions deploys pushes to this branch as Cloudflare Pages previews using 
 The region selector progressively enhances five readable articles into button-controlled panels; it requires no backend. There are no booking or signup submissions. Text about future journeys is intentionally undated.
 
 Imagery is derived from the repository's existing Calakmul photograph, with existing SomosMaya brand assets reused directly. Regional artwork in option 3 is abstract decoration, not a geographic map or historical symbol.
+
+## Round two — variations on The Travel Journal
+
+Compare at `/designs/journal/`. The original No. 2 remains available unchanged.
+
+- `/designs/journal-1/`: Letters from Mexico — postcard and letter composition. The postcard toggle progressively enhances two readable sides.
+- `/designs/journal-2/`: The Slow Atlas — magazine composition with a landscape photograph and a restrained green palette.
+- `/designs/journal-3/`: Field Notes — notebook composition, native expandable destination notes, and a local-only packing checklist.
+
+Each variation owns its HTML and CSS; shared image and base accessibility styles remain in `shared/`. All are preview deployments on the existing design branch.
